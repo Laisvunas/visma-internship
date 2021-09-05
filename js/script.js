@@ -2,6 +2,7 @@
 
 const storageKey = "visma-pizzas";
 const tabBtns = document.querySelectorAll("#tab-btns .tab-btn");
+const noItemsMsg = document.querySelector("#no-items-msg");
 const itemImgs = document.querySelectorAll("#item-photos img");
 const itemImgInput = document.querySelector("#item-img-url");
 const itemNameInput = document.querySelector("#item-name");
@@ -10,6 +11,7 @@ const itemHeatInput = document.querySelector("#item-heat");
 const itemToppingsInput = document.querySelector("#item-toppings");
 const newItemForm = document.querySelector("#add-new-item-form");
 const sortingForm = document.querySelector("#sorting-form");
+const menuContainer = document.querySelector("#items");
 
 const tabOpen = (e) => {
     const elClicked = e.target;
@@ -71,7 +73,7 @@ const duplicateToppings = (arr) => {
 const duplicateNames = (itemName) => {
     let found = false;
 
-    const itemsData = JSON.parse(sessionStorage.getItem(storageKey));
+    const itemsData = JSON.parse(sessionStorage.getItem(storageKey)) || [];
 
     for (let i = 0; i < itemsData.length; i++) {
         if (itemsData[i].itemName == itemName) {
@@ -84,11 +86,72 @@ const duplicateNames = (itemName) => {
 };
 
 const displayMenu = () => {
-    const itemsData = JSON.parse(sessionStorage.getItem(storageKey)); 
+    const itemsData = JSON.parse(sessionStorage.getItem(storageKey)) || []; 
     const sortBy = sortingForm.sort.value;
     const orderBy = sortingForm.order.value;
+    let html = "";
 
+    if (itemsData.length === 0) {
+        noItemsMsg.style.display = "block";
+        menuContainer.innerHTML = "";
+    }
+    else {
+        noItemsMsg.style.display = "none";
+        if (sortBy === "by-name") {
+            itemsData.sort((a, b) => (a.itemName < b.itemName ? -1 : 1));
+        }
+    
+        if (sortBy === "by-price") {
+            itemsData.sort((a, b) => (a.itemPrice < b.itemPrice ? -1 : 1));
+        }
+    
+        if (sortBy === "by-heat") {
+            itemsData.sort((a, b) => (a.itemHeat < b.itemHeat ? -1 : 1));
+        }
+        
+        if (orderBy === "desc") {
+            itemsData.reverse();
+        }
+    
+        itemsData.forEach((item) => {
+            html += `
+                <div class="card">
+                    <img src="${item.itemImg}">
+                    <div class="item-data">
+                        <div class="name-price">
+                            <h3><img src="img/heat${item.itemHeat ? item.itemHeat : "1"}.png"> ${item.itemName}</h3>
+                            <span class="price">${new Intl.NumberFormat('lt-LT', { style: 'currency', currency: 'EUR' }).format(item.itemPrice)}</span>
+                        </div>
+                        <div class="toppings">${item.itemToppings.join(", ")}</div>
+                        <div class="action"><button data-item-name="${item.itemName}">Delete</button></div>
+                    </div> 
+                </div>
+            `;
+        });
+        menuContainer.innerHTML = html;
+    }
+};
 
+const deleteItem = (e) => {
+    const clickedEl = e.target;
+    if (clickedEl.tagName.toLowerCase() === "button") {
+        const itemName = clickedEl.getAttribute("data-item-name");
+        let items = JSON.parse(sessionStorage.getItem(storageKey));
+        let itemsResult = JSON.parse(sessionStorage.getItem(storageKey));
+        for (let i = 0; i < items.length; i++) {
+            if (items[i].itemName === itemName) {
+                const response = confirm('Do you really want to delete pizza "' + itemName + '" ?');
+                console.log("response: " + response);
+                if (response) {
+                    itemsResult.splice(i, 1);
+                    console.log("itemsResult: " + JSON.stringify(itemsResult));
+                    sessionStorage.setItem(storageKey, JSON.stringify(itemsResult));
+                    displayMenu();
+                    return;
+                }
+            }
+        }
+    }
 };
 
 const submitForm = (e) => {
@@ -106,7 +169,7 @@ const submitForm = (e) => {
     }
 
     if (duplicateNames(itemName) === true) {
-        alert("Pizza having such name already exists in the menu.");
+        alert('Pizza named "' + itemName + '" already exists in the menu.');
         return;
     }
     
@@ -121,7 +184,8 @@ const submitForm = (e) => {
     items = [...items, item];
     sessionStorage.setItem(storageKey, JSON.stringify(items));
     formReset();
-    alert("Pizza has been added to the menu.")
+    displayMenu();
+    alert('Pizza "' + itemName + '"  been added to the menu.')
 }
 
 tabBtns.forEach((item) => {
@@ -133,3 +197,9 @@ itemImgs.forEach((item) => {
 });
 
 newItemForm.addEventListener("submit", submitForm);
+
+sortingForm.addEventListener("change", displayMenu);
+
+menuContainer.addEventListener("click", deleteItem);
+
+displayMenu();
