@@ -143,10 +143,8 @@ const deleteItem = (e) => {
         for (let i = 0; i < items.length; i++) {
             if (items[i].itemName === itemName) {
                 const response = confirm('Do you really want to delete pizza "' + itemName + '" ?');
-                console.log("response: " + response);
                 if (response) {
                     itemsResult.splice(i, 1);
-                    console.log("itemsResult: " + JSON.stringify(itemsResult));
                     sessionStorage.setItem(storageKey, JSON.stringify(itemsResult));
                     displayMenu();
                     return;
