@@ -51,6 +51,7 @@ const formReset = () => {
     itemPriceInput.value = "";
     itemHeatInput.value = "";
     itemToppingsInput.value = "";
+    itemImgInput.value = "img/pizza-06.jpg"
     itemImgs.forEach((item) => {
         item.classList.remove("selected");
     });
@@ -130,6 +131,7 @@ const displayMenu = () => {
         });
         menuContainer.innerHTML = html;
     }
+    formReset();
 };
 
 const deleteItem = (e) => {
@@ -183,7 +185,6 @@ const submitForm = (e) => {
     let items = JSON.parse(sessionStorage.getItem(storageKey)) || [];
     items = [...items, item];
     sessionStorage.setItem(storageKey, JSON.stringify(items));
-    formReset();
     displayMenu();
     alert('Pizza "' + itemName + '"  been added to the menu.')
 }
