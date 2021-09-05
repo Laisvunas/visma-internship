@@ -51,7 +51,7 @@ h3 {
 
 #no-items-msg {
     padding-top: 1rem;
-    display: none; /* remove */
+    display: none; 
 }
 
 #add-new {
@@ -155,10 +155,6 @@ textarea {
     border: solid 3px green;
 }
 
-@media only screen and (max-width: 576px) { /* remove */
-
-}
-
 @media only screen and (min-width: 577px) {
     
 
@@ -205,9 +201,5 @@ textarea {
     }
 
     
-    
-}
-
-@media only screen and (min-width: 1024px) { /* remove */
     
 }
