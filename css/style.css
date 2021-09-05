@@ -29,11 +29,11 @@ h3 {
     font-size: 18px; 
 }
 
-#tabs {
+#tab-btns {
     display: flex;
 }
 
-.tab-active {
+.tab-btn-active {
     border-left: 1px solid silver;
     border-top: 1px solid silver;
     border-right: 1px solid silver;
@@ -41,11 +41,11 @@ h3 {
     border-radius: 3px;
 }
 
-.tab-inactive {
+.tab-btn-inactive {
     cursor: pointer;
 }
 
-.tab-inactive:hover {
+.tab-btn-inactive:hover {
     background: #f0f0f0;
 }
 
@@ -54,12 +54,8 @@ h3 {
     display: none; /* remove */
 }
 
-#controls {
-    display: none; /* remove */
-}
-
-#items {
-    display: none; /* remove */ 
+#add-new {
+    display: none; 
 }
 
 .card {
@@ -118,7 +114,7 @@ label {
     margin: 16px 0 4px 0;
 }
 
-input, textarea {
+input:not([type=radio]), textarea {
     box-sizing: border-box;
     width: 100%;
     border: solid 1px #dbdbdb;
@@ -139,19 +135,27 @@ textarea {
     resize: vertical;
 }
 
-#item-photo {
+#item-photos {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
 }
 
-#item-photo img {
+#item-photos img {
     border: 3px solid transparent;
     width: calc(50% - 8px);
     margin-top: 6px;
 }
 
-@media only screen and (max-width: 576px) {
+#item-photos img:hover {
+    border: solid 3px #3850b7;
+}
+
+#item-photos img.selected {
+    border: solid 3px green;
+}
+
+@media only screen and (max-width: 576px) { /* remove */
 
 }
 
@@ -188,7 +192,7 @@ textarea {
         text-align: right;
     }
     
-    #item-photo > img {
+    #item-photos > img {
         width: calc(33.3% - 9px);
     }
 
@@ -204,6 +208,6 @@ textarea {
     
 }
 
-@media only screen and (min-width: 1024px) {
+@media only screen and (min-width: 1024px) { /* remove */
     
 }
